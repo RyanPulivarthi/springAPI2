@@ -1,6 +1,7 @@
 package com.myproject.springdemo.Controller;
 
 import com.myproject.springdemo.DTOs.CategoryDTO;
+import com.myproject.springdemo.DTOs.FakeStoreDTO;
 import com.myproject.springdemo.DTOs.ProductDTO;
 import com.myproject.springdemo.Model.Category;
 import com.myproject.springdemo.Model.Product;
@@ -11,10 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
 
@@ -37,8 +37,20 @@ public class ProductController {
         }
     }
     @GetMapping("/products")
-    public List<Product> getProducts(){
-        return fakeStoreServiceInterface.getAllProducts();
+    public List<ProductDTO> getProducts(){
+        List<Product> products=fakeStoreServiceInterface.getAllProducts();
+        List<ProductDTO> productDTOList=new ArrayList<>();
+        for(Product product:products) {
+            productDTOList.add(getProductDTO(product));
+        }
+        return productDTOList;
+    }
+    @PutMapping("/products/{id}")
+    public ProductDTO replaceProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+        Product product=convertToProduct(productDTO);
+        Product newProduct=fakeStoreServiceInterface.replaceProduct(id,product);
+        return getProductDTO(newProduct);
+
     }
 
     public ProductDTO getProductDTO(Product product){
@@ -53,5 +65,18 @@ public class ProductController {
         categoryDTO.setDesc(product.getCategory().getDesc());
         productDTO.setCategoryDTO(categoryDTO);
         return productDTO;
+    }
+    public Product convertToProduct(ProductDTO productDTO){
+        Product product=new Product();
+        product.setId(productDTO.getId());
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setImgUrl(productDTO.getImgUrl());
+        Category category=new Category();
+        category.setName(productDTO.getCategoryDTO().getName());
+        category.setDesc(productDTO.getDesc());
+        product.setCategory(category);
+        product.setDesc(productDTO.getDesc());
+        return product;
     }
 }

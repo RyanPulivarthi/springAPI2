@@ -31,8 +31,17 @@ public class FakeStoreApiService implements FakeStoreServiceInterface{
     public List<Product> getAllProducts(){
         List<Product> productList=new ArrayList<>();
         RestTemplate restTemplate=restTemplateBuilder.build();
+        FakeStoreDTO[] fakeStoreDTOS=restTemplate.getForEntity("https://fakestoreapi.com/products",FakeStoreDTO[].class).getBody();
+        for(FakeStoreDTO fakeStoreDTO:fakeStoreDTOS){
+            productList.add(convertToProduct(fakeStoreDTO));
+        }
 
         return productList;
+    }
+
+    @Override
+    public Product replaceProduct(Long id, Product product) {
+        return null;
     }
 
     @Override

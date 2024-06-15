@@ -8,4 +8,6 @@ public interface FakeStoreServiceInterface {
     Product getProductById(Long id);
     void createProduct(Product product);
     List<Product> getAllProducts();
+
+    Product replaceProduct(Long id, Product product);
 }
