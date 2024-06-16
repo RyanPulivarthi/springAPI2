@@ -52,7 +52,8 @@ public class FakeStoreApiService implements FakeStoreServiceInterface{
 
 
     @Override
-    public void createProduct(Product product) {
+    public Product createProduct(Product product) {
+        return null;
     }
     public <T> ResponseEntity<T> requestForEntity(String url,HttpMethod httpMethod,Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
         RestTemplate restTemplate=restTemplateBuilder.build();

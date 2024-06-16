@@ -48,6 +48,12 @@ public class ProductController {
         return getProductDTO(newProduct);
 
     }
+    @PostMapping("/products/")
+    public ProductDTO pushToDb(@RequestBody ProductDTO productDTO){
+        Product product=convertToProduct(productDTO);
+        Product reslut= fakeStoreServiceInterface.createProduct(product);
+        return getProductDTO(reslut);
+    }
 
     public ProductDTO getProductDTO(Product product){
         ProductDTO productDTO=new ProductDTO();
