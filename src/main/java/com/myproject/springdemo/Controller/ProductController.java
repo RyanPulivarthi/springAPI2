@@ -1,11 +1,9 @@
 package com.myproject.springdemo.Controller;
 
 import com.myproject.springdemo.DTOs.CategoryDTO;
-import com.myproject.springdemo.DTOs.FakeStoreDTO;
 import com.myproject.springdemo.DTOs.ProductDTO;
 import com.myproject.springdemo.Model.Category;
 import com.myproject.springdemo.Model.Product;
-import com.myproject.springdemo.Services.FakeStoreApiService;
 import com.myproject.springdemo.Services.FakeStoreServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HexFormat;
 import java.util.List;
 
 @RestController
@@ -25,15 +22,14 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductDTO> getProduct(@PathVariable Long id){
         try {
-            if (id <= 0)
+            if (id <= 0 && id>20)
                 throw new IllegalArgumentException("Invalid id");
             Product product = fakeStoreServiceInterface.getProductById(id);
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
             headers.add("Created By", "Ryan");
             return new ResponseEntity<>(getProductDTO(product), headers, HttpStatus.OK);
         }catch (Exception e){
-            System.out.println("This is in catch block");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw e;
         }
     }
     @GetMapping("/products")
@@ -56,13 +52,13 @@ public class ProductController {
     public ProductDTO getProductDTO(Product product){
         ProductDTO productDTO=new ProductDTO();
         productDTO.setId(product.getId());
-        productDTO.setDesc(product.getDesc());
+        productDTO.setDesc(product.getDescription());
         productDTO.setName(product.getName());
         productDTO.setPrice(product.getPrice());
         productDTO.setImgUrl(product.getImgUrl());
         CategoryDTO categoryDTO=new CategoryDTO();
-        categoryDTO.setName(product.getCategory().getName());
-        categoryDTO.setDesc(product.getCategory().getDesc());
+    //    categoryDTO.setName(product.getCategory().getName());
+     //   categoryDTO.setDesc(product.getCategory().getDesc());
         productDTO.setCategoryDTO(categoryDTO);
         return productDTO;
     }
@@ -74,9 +70,9 @@ public class ProductController {
         product.setImgUrl(productDTO.getImgUrl());
         Category category=new Category();
         category.setName(productDTO.getCategoryDTO().getName());
-        category.setDesc(productDTO.getDesc());
-        product.setCategory(category);
-        product.setDesc(productDTO.getDesc());
+        category.setDescription(productDTO.getDesc());
+    //    product.setCategory(category);
+        product.setDescription(productDTO.getDesc());
         return product;
     }
 }

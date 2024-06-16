@@ -1,14 +1,18 @@
 package com.myproject.springdemo.Services;
 
+import com.myproject.springdemo.DTOs.CategoryDTO;
 import com.myproject.springdemo.DTOs.FakeStoreDTO;
 import com.myproject.springdemo.Model.Category;
 import com.myproject.springdemo.Model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -41,11 +45,20 @@ public class FakeStoreApiService implements FakeStoreServiceInterface{
 
     @Override
     public Product replaceProduct(Long id, Product product) {
-        return null;
+        FakeStoreDTO fakeStoreDTO=getFakeStoreDTO(product);
+        FakeStoreDTO fakeStoreDTOresponse=requestForEntity("https://fakestoreapi.com/products/{id}",HttpMethod.PUT,fakeStoreDTO,FakeStoreDTO.class,id).getBody();
+        return convertToProduct(fakeStoreDTOresponse);
     }
+
 
     @Override
     public void createProduct(Product product) {
+    }
+    public <T> ResponseEntity<T> requestForEntity(String url,HttpMethod httpMethod,Object request, Class<T> responseType, Object... uriVariables) throws RestClientException {
+        RestTemplate restTemplate=restTemplateBuilder.build();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(request, responseType);
+        ResponseExtractor<ResponseEntity<T>> responseExtractor = restTemplate.responseEntityExtractor(responseType);
+        return restTemplate.execute(url, httpMethod, requestCallback, responseExtractor, uriVariables);
     }
 
     public Product convertToProduct(FakeStoreDTO fakeStoreDTO){
@@ -56,9 +69,22 @@ public class FakeStoreApiService implements FakeStoreServiceInterface{
         product.setImgUrl(fakeStoreDTO.getImage());
         Category category=new Category();
         category.setName(fakeStoreDTO.getCategory());
-        category.setDesc(fakeStoreDTO.getDescription());
+        category.setDescription(fakeStoreDTO.getDescription());
         product.setCategory(category);
-        product.setDesc(fakeStoreDTO.getDescription());
+        product.setDescription(fakeStoreDTO.getDescription());
         return product;
+    }
+    public FakeStoreDTO getFakeStoreDTO(Product product){
+        FakeStoreDTO fakeStoreDTO=new FakeStoreDTO();
+        fakeStoreDTO.setId(product.getId());
+        fakeStoreDTO.setDescription(product.getDescription());
+        fakeStoreDTO.setTitle(product.getName());
+        fakeStoreDTO.setPrice(product.getPrice());
+        fakeStoreDTO.setImage(product.getImgUrl());
+        CategoryDTO categoryDTO=new CategoryDTO();
+        categoryDTO.setName(product.getCategory().getName());
+        categoryDTO.setDesc(product.getCategory().getDescription());
+        fakeStoreDTO.setCategory(categoryDTO.getName());
+        return fakeStoreDTO;
     }
 }
