@@ -58,13 +58,13 @@ public class ProductController {
     public ProductDTO getProductDTO(Product product){
         ProductDTO productDTO=new ProductDTO();
         productDTO.setId(product.getId());
-        productDTO.setDesc(product.getDescription());
+        productDTO.setDescription(product.getDescription());
         productDTO.setName(product.getName());
         productDTO.setPrice(product.getPrice());
         productDTO.setImgUrl(product.getImgUrl());
         CategoryDTO categoryDTO=new CategoryDTO();
-    //    categoryDTO.setName(product.getCategory().getName());
-     //   categoryDTO.setDesc(product.getCategory().getDesc());
+        categoryDTO.setName(product.getCategory().getName());
+        categoryDTO.setDescription(product.getCategory().getDescription());
         productDTO.setCategoryDTO(categoryDTO);
         return productDTO;
     }
@@ -72,13 +72,15 @@ public class ProductController {
         Product product=new Product();
         product.setId(productDTO.getId());
         product.setName(productDTO.getName());
+        product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
         Category category=new Category();
+        category.setId(product.getId());
         category.setName(productDTO.getCategoryDTO().getName());
-        category.setDescription(productDTO.getDesc());
-    //    product.setCategory(category);
-        product.setDescription(productDTO.getDesc());
+        category.setDescription(productDTO.getCategoryDTO().getDescription());
+        product.setCategory(category);
+
         return product;
     }
 }

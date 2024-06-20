@@ -84,7 +84,7 @@ public class FakeStoreApiService implements FakeStoreServiceInterface{
         fakeStoreDTO.setImage(product.getImgUrl());
         CategoryDTO categoryDTO=new CategoryDTO();
         categoryDTO.setName(product.getCategory().getName());
-        categoryDTO.setDesc(product.getCategory().getDescription());
+        categoryDTO.setDescription(product.getCategory().getDescription());
         fakeStoreDTO.setCategory(categoryDTO.getName());
         return fakeStoreDTO;
     }
