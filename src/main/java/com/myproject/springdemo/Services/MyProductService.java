@@ -1,6 +1,8 @@
 package com.myproject.springdemo.Services;
 
+import com.myproject.springdemo.DAOs.CategoryRepo;
 import com.myproject.springdemo.DAOs.ProductRepo;
+import com.myproject.springdemo.Model.Category;
 import com.myproject.springdemo.Model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class MyProductService implements FakeStoreServiceInterface{
     @Autowired
     ProductRepo productRepo;
+    @Autowired
+    CategoryRepo caRepo;
     @Override
     public Product getProductById(Long id) {
         Optional<Product> optionalProduct=productRepo.findById(id);
@@ -24,8 +28,14 @@ public class MyProductService implements FakeStoreServiceInterface{
 
     @Override
     public Product createProduct(Product product) {
-        return productRepo.save(product);
+        Optional<Category> optionalCategory=caRepo.findById(product.getCategory().getId());
+        if(optionalCategory.isPresent())
 
+            return productRepo.save(product);
+        else{
+            caRepo.save(product.getCategory());
+        }
+       return productRepo.save(product);
     }
 
     @Override

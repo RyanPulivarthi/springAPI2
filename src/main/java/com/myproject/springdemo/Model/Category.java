@@ -1,7 +1,6 @@
 package com.myproject.springdemo.Model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
@@ -13,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@PrimaryKeyJoinColumn(name = "base_id")
 public class Category extends BaseModel {
     private String name;
     private String description;
