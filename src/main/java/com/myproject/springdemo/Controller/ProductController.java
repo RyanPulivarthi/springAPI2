@@ -76,7 +76,7 @@ public class ProductController {
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
         Category category=new Category();
-        category.setId(productDTO.getId());
+        category.setId(productDTO.getCategoryDTO().getId());
         category.setName(productDTO.getCategoryDTO().getName());
         category.setDescription(productDTO.getCategoryDTO().getDescription());
         product.setCategory(category);
