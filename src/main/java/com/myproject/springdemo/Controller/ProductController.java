@@ -24,11 +24,14 @@ public class ProductController {
         try {
             if (id <= 0 && id>20)
                 throw new IllegalArgumentException("Invalid id");
+
+
+
             Product product = fakeStoreServiceInterface.getProductById(id);
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
             headers.add("Created By", "Ryan");
             return new ResponseEntity<>(getProductDTO(product), headers, HttpStatus.OK);
-        }catch (Exception e){
+    }catch (IllegalArgumentException e) {
             throw e;
         }
     }
@@ -63,6 +66,7 @@ public class ProductController {
         productDTO.setPrice(product.getPrice());
         productDTO.setImgUrl(product.getImgUrl());
         CategoryDTO categoryDTO=new CategoryDTO();
+        categoryDTO.setId(product.getCategory().getId());
         categoryDTO.setName(product.getCategory().getName());
         categoryDTO.setDescription(product.getCategory().getDescription());
         productDTO.setCategoryDTO(categoryDTO);

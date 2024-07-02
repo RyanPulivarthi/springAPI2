@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@PrimaryKeyJoinColumn(name = "base_id")
 public class Category extends BaseModel {
     private String name;
     private String description;

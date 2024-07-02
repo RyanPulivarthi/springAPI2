@@ -9,8 +9,9 @@ import java.util.Date;
 @Getter
 @Setter
 
-@Inheritance(strategy = InheritanceType.JOINED)
+
 @Entity
+@MappedSuperclass
 public abstract class BaseModel {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
